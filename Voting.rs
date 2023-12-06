@@ -372,6 +372,7 @@ pub fn process_instruction(
         let mut user_vote_account_data = try_from_slice_unchecked::<UserVotingAccount>(&data_2)?;
         user_vote_account_data.vote_status = ix_data.vote;
         user_vote_account_data.last_time_voted = current_time;
+        user_vote_account_data.serialize(&mut &mut user_vote_account.data.borrow_mut()[..])?;
 
         msg!("Vote updated.");
     } else {
