@@ -21,8 +21,8 @@ use thiserror::Error;
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 struct CreateVotingInstruction {
-    starts_at: u32,
-    ends_at: u32,
+    starts_at: u64,
+    ends_at: u64,
     title: String
 }
 
@@ -42,15 +42,15 @@ struct UpdateVoteInstruction {
 struct VoteMainAccount {
     discriminator: [u8; 8],
     creator: Pubkey,
-    starts_at: u32,
-    ends_at: u32,
+    starts_at: u64,
+    ends_at: u64,
     title: String
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 struct UserVotingAccount {
     discriminator: [u8; 8],
-    last_time_voted: u32,
+    last_time_voted: u64,
     vote_status: bool,
     voted_to: String
 }
@@ -111,7 +111,7 @@ pub fn process_instruction(
         let pda = next_account_info(accounts)?;
         let system_program = next_account_info(accounts)?;
 
-        let current_time = clock::Clock::get().unwrap().unix_timestamp as u32;
+        let current_time = clock::Clock::get().unwrap().unix_timestamp as u64;
 
         let data = _instruction_data.get(8..).unwrap();
         let ix_data = try_from_slice_unchecked::<CreateVotingInstruction>(data)?;
@@ -239,7 +239,7 @@ pub fn process_instruction(
             return Err(ProgramError::InvalidAccountData);
         };
 
-        let current_time = clock::Clock::get().unwrap().unix_timestamp as u32;
+        let current_time = clock::Clock::get().unwrap().unix_timestamp as u64;
         let voting_account_data = try_from_slice_unchecked::<VoteMainAccount>(data_2.get(..).unwrap())?;
 
         if voting_account_data.starts_at > current_time {
@@ -353,7 +353,7 @@ pub fn process_instruction(
             return Err(ProgramError::InvalidAccountData);
         };
 
-        let current_time = clock::Clock::get().unwrap().unix_timestamp as  u32;
+        let current_time = clock::Clock::get().unwrap().unix_timestamp as  u64;
         let voting_account_data = try_from_slice_unchecked::<VoteMainAccount>(&data)?;
 
         if voting_account_data.starts_at > current_time {
