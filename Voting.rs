@@ -159,7 +159,7 @@ pub fn process_instruction(
             return Err(ProgramError::Custom(Errors::MaxVotingTimeExceeded as u32));
         };
 
-        let space: usize = 8 + 32 + 4 + 4 + (4 + 50);
+        let space: usize = 8 + 32 + 8 + 8 + (4 + 50);
         let rent_exempt = rent::Rent::get().unwrap().minimum_balance(space);
         invoke_signed(
             &create_account(
@@ -262,7 +262,7 @@ pub fn process_instruction(
             return Err(ProgramError::Custom(Errors::InvalidPdaAddress as u32));
         };
 
-        let space: usize = 8 + 4 + 1 + (4 + 50);
+        let space: usize = 8 + 8 + 1 + (4 + 50);
         let rent_exempt = rent::Rent::get().unwrap().minimum_balance(space);
         invoke_signed(
             &create_account(
